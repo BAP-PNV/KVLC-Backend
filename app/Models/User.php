@@ -8,8 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class User extends Model
 {
     use HasFactory;
+    
     protected $table = "users";
     protected $fillable = ['email', 'fullname', 'password','status'];
+    
     public function friendRelationships()
     {
         return $this->hasMany(\App\Models\FriendRelationship::class);
