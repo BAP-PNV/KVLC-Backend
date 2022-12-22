@@ -14,4 +14,12 @@ class User extends Model
     {
         return $this->hasMany(\App\Models\FriendRelationship::class);
     }
+    public function membersOfConversation()
+    {
+        return $this->hasMany(\App\Models\MembersOfConversation::class);
+    }
+    public function messages()
+    {
+        return $this->hasMany(\App\Models\Message::class);
+    }
 }
