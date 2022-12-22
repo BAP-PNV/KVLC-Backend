@@ -14,12 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::create('members_of_conversations', function (Blueprint $table) {
-            $table->increments("con_id");
+            $table->unsignedInteger("con_id");
             $table->foreign('con_id')->references('id')->on('conversations')->onDelete('cascade');
             $table->unsignedInteger("user_id");
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string("display_name");
-
+            $table->timestamps();
         });
     }
 

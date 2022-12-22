@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\FriendRelationship>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Conversation>
  */
-class FriendRelationshipFactory extends Factory
+class ConversationFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,9 +17,7 @@ class FriendRelationshipFactory extends Factory
     public function definition()
     {
         return [
-                'id'=>rand(1,5),
-                'user_id' => rand(1000000,1000009),
-                'is_blocked' => fake()->boolean()
+            'group_name'=>fake()->name(),
         ];
     }
 }

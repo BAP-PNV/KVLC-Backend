@@ -14,12 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('friend_relationships', function (Blueprint $table) {
-            $table->unsignedInteger("user1_id");
-            $table->unsignedInteger("user2_id");
+            $table->integer('id');
+            $table->unsignedInteger("user_id");
             $table->boolean("is_blocked")->default(0);
-            $table->foreign('user1_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('user2_id')->references('id')->on('users')->onDelete('cascade');
-            $table->primary(["user1_id", "user2_id"], "rel_id");
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
             });
     }
