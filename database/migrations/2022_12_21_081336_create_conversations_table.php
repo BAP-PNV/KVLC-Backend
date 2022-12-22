@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('conversations', function (Blueprint $table) {
-            $table->increments("id");
+            $table->increments("id")->from(1000000);
             $table->string("group_name");
             $table->timestamps();
         });

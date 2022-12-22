@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('messages', function (Blueprint $table) {
-            $table->increments("id");
+            $table->increments("id")->from(1000000);
             $table->unsignedInteger("con_id");
             $table->foreign('con_id')->references('id')->on('conversations')->onDelete('cascade');
             $table->mediumText("content");
