@@ -17,5 +17,5 @@ interface IRepository {
   public function delete($id): mixed;
   public function getQuery(): Builder|\Illuminate\Database\Query\Builder;
   public function clearQuery(): \Illuminate\Database\Query\Builder;
-  public function paginate($page): LengthAwarePaginator;
+  public function paginate($page): \Illuminate\Contracts\Pagination\LengthAwarePaginator;
 }
