@@ -10,10 +10,19 @@ use Illuminate\Database\Eloquent\Collection;
 
 abstract class BaseRepository implements IRepository
 {
-    protected string $model;
+    protected $model;
     protected Builder $query;
 
-    public abstract function getModel();
+    /**
+     * @throws BindingResolutionException
+     */
+    public function __construct()
+    {
+        $this->setModel();
+        $this->query = $this->model->newQuery();
+    }
+
+    public abstract function getModel(): string;
 
     /**
      * @throws BindingResolutionException
@@ -90,6 +99,11 @@ abstract class BaseRepository implements IRepository
     public function with($relationship): mixed
     {
         return $this->model->$relationship;
+    }
+
+    public function delete($id): mixed
+    {
+        return $this->model->destroy($id);
     }
 }
 
