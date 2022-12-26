@@ -4,7 +4,7 @@ namespace App\Repositories\Implementations;
 
 use App\Models\MembersOfConversation;
 use App\Repositories\Interfaces\IMemberRepository;
-use Ramsey\Collection\Collection;
+use Illuminate\Database\Eloquent\Collection;
 
 class MemberRepository extends BaseRepository implements IMemberRepository
 {
