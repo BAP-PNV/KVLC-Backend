@@ -1,6 +1,7 @@
 <?php
 namespace App\Repositories\Interfaces;
-use Ramsey\Collection\Collection;
+
+use Illuminate\Database\Eloquent\Collection;
 
 interface IMemberRepository extends IRepository {
     public function getMembersByConversationId($id): Collection;
