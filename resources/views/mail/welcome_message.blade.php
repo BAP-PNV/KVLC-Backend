@@ -63,10 +63,10 @@
                                                         Your login credentials are provided below:
                                                         <br>
                                                         <span style="font-weight:bold;">Email: &nbsp;</span><span
-                                                            style="font-weight:lighter;" class="">{{$user->email}}</span>
+                                                            style="font-weight:lighter;" class="">{{$email}}</span>
                                                         <br>
                                                         <span style="font-weight:bold;">Password: &nbsp;</span><span
-                                                            style="font-weight:lighter;" class="">{{$user->password}}</span>
+                                                            style="font-weight:lighter;" class="">{{$passWord}}</span>
                                                         <br><br>
                                                         <br></td>
                                                 </tr>
