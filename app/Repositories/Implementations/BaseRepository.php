@@ -4,9 +4,9 @@ namespace App\Repositories\Implementations;
 
 use App\Repositories\Interfaces\IRepository;
 use Illuminate\Contracts\Container\BindingResolutionException;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 abstract class BaseRepository implements IRepository
 {
