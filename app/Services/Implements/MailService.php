@@ -18,17 +18,17 @@ class MailService implements \App\Services\Interfaces\IMailService
         switch ($mailType) {
             default: {return;}
             case MailType::OTP_MAIL: {
-                $otp = rand(123456, 999999); //random
                 $user = $info["user"];
+                $otp = $info["otp"];
                 $otpMail = new OTPMail($user, $otp);
                 Mail::to($user->email)->send($otpMail);
                 return;
             }
             case MailType::WELCOME_MAIL:{
                 $email = $info["email"];
-                $passWord=$info['passWord'];
-                $wellMail=new WelComeMail($email,$passWord);
-                Mail::to($email)->send($wellMail);
+                $passWord=$info['password'];
+                $welcomeMail=new WelComeMail($email,$passWord);
+                Mail::to($email)->send($welcomeMail);
                 return;
             }
             case MailType::CHANGE_PASSWORD:{
