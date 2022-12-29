@@ -15,16 +15,16 @@ class WelComeMail extends Mailable
 
     use Queueable, SerializesModels;
     private string $email;
-    private int $passWord;
+    private int $password;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(string $email,int $passWord)
+    public function __construct(string $email,int $password)
     {
         $this->email=$email;
-        $this->passWord=$passWord;
+        $this->password=$password;
     }
 
     /**
@@ -48,7 +48,7 @@ class WelComeMail extends Mailable
     {
         return new Content(
             view: 'mail.welcome_message',
-            with: ['email'=>$this->email,'passWord'=>$this->passWord]
+            with: ['email'=>$this->email,'password'=>$this->password]
         );
     }
 
