@@ -20,11 +20,7 @@ return new class extends Migration
             $table->mediumText("content");
             $table->unsignedInteger("user_id");
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->enum('type', ['video', 'image', 'record']);  
-
-           
-
-
+            $table->enum('type', ['video', 'image', 'record','text']);
             $table->timestamps();
         });
     }
