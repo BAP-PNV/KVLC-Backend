@@ -43,9 +43,10 @@ abstract class BaseRepository implements IRepository
         return $this->query->getQuery();
     }
 
-    public function all(): Collection
+    public function all($toArray = false): Collection|array|null
     {
-        return $this->model->all();
+        $all = $this->model->all();
+        return $toArray ? $all->toArray() : $all;
     }
 
     public function findById($id): mixed

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 interface IRepository {
-  public function all(): Collection;
+  public function all(): Collection|array|null;
   public function findById($id): mixed;
   public function create($attributes = []): mixed;
   public function update($id, array $attributes = []): mixed;
