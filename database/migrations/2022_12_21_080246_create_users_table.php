@@ -16,9 +16,9 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->increments("id")->from(1000000);
             $table-> string("email",100)->nullable();
-            $table-> string("fullname",50)->nullable();
+            $table-> string("full_name",50)->nullable();
             $table-> string("password")->nullable();
-            $table->enum('status', ['expired', 'active', 'disabled']);  
+            $table-> boolean('status');
             $table->timestamps();
         });
     }

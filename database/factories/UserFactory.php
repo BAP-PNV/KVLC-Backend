@@ -18,12 +18,12 @@ class UserFactory extends Factory
      */
     public function definition()
     {
-        $array=['expired', 'active', 'disabled'];
+
         return [
             'email' => fake()->unique()->safeEmail(),
-            'fullname' =>fake()->name(),
+            'full_name' =>fake()->name(),
             'password' =>Hash::make('12345'),
-            'status' =>$array[rand(0,2)]
+            'status' =>fake()->boolean()
         ];
     }
 
