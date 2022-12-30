@@ -19,6 +19,7 @@ return new class extends Migration
             $table->boolean("is_blocked")->default(0);
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
+            $table->primary(["id", "user_id"], "rel_id");
             });
     }
 

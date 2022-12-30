@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedInteger("user_id");
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string("display_name");
+            $table->primary(["con_id", "user_id"]);
             $table->timestamps();
         });
     }
