@@ -2,11 +2,16 @@
 
 namespace App\Exceptions;
 
+use App\Traits\ApiResponse;
+use Firebase\JWT\ExpiredException;
+use Firebase\JWT\SignatureInvalidException;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Throwable;
+use Symfony\Component\HttpFoundation\Response;
 
 class Handler extends ExceptionHandler
 {
+    use ApiResponse;
     /**
      * A list of exception types with their corresponding custom log levels.
      *
@@ -41,10 +46,36 @@ class Handler extends ExceptionHandler
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->renderable(function (QueryException $e, $req) {
+            return $this->responseError(
+                "exception.common.query"
+            );
+        });
+        $this->renderable(function (ExpiredException $e, $req) {
+            return $this->responseError(
+                "exception.common.token.expired",
+                Response::HTTP_UNAUTHORIZED
+            );
+        });
+        $this->renderable(function (SignatureInvalidException $e, $req) {
+            return $this->responseError(
+                "exception.common.token.invalid-signature",
+                Response::HTTP_UNAUTHORIZED
+            );
+        });
+        $this->renderable(function (\DomainException $e, $req) {
+            return $this->responseError(
+                "exception.common.token.validate-wrong",
+                Response::HTTP_UNAUTHORIZED
+            );
+        });
+        $this->renderable(function (\InvalidArgumentException $e, $req) {
+            return $this->responseError(
+                "exception.common.token.wrong-key",
+                Response::HTTP_UNAUTHORIZED
+            );
         });
     }
 }
