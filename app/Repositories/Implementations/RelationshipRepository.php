@@ -5,6 +5,7 @@ namespace App\Repositories\Implementations;
 use App\Models\FriendRelationship;
 use App\Repositories\Interfaces\IRelationshipRepository;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 
 class RelationshipRepository extends BaseRepository implements IRelationshipRepository
 {
@@ -14,68 +15,40 @@ class RelationshipRepository extends BaseRepository implements IRelationshipRepo
         return FriendRelationship::class;
     }
 
-    function blockFriend($relaID, $userIdIsBlocked): mixed
+    function blockFriend(int $relaID, int $userIdIsBlocked): void
     {
-        try {
-            $this->model::where('id', $relaID)
-                ->where("user_id", $userIdIsBlocked)
-                ->update(["is_blocked" => 1]);
-            return true;
-        } catch (Exception $e) {
-            return false;
-        }
-
+        $this->model::where('id', $relaID)
+            ->where("user_id", $userIdIsBlocked)
+            ->update(["is_blocked" => 1]);
     }
 
-    function addFriend($userIdWantAdd, $userIdBeAdded): mixed
+    function addFriend(int $userIdWantAdd,int $userIdBeAdded): void
     {
-        try {
-            $randId = rand(0, 1000000);
-
-            $this->model::create(array("id" => $randId, "user_id" => $userIdWantAdd));
-            $this->model::create(array("id" => $randId, "user_id" => $userIdBeAdded));
-            return true;
-        } catch (Exception $e) {
-            return false;
-        }
+        $randId = rand(0, 1000000);
+        $this->model::create(array("id" => $randId, "user_id" => $userIdWantAdd));
+        $this->model::create(array("id" => $randId, "user_id" => $userIdBeAdded));
     }
 
-    function unFriend($relaId): mixed
+    function unFriend(int $relaId): void
     {
-        try {
-            $this->model::where('id', $relaId)->get()->delete();
-            return true;
-
-        } catch (Exception $e) {
-            throw $e;
-        }
+        $this->model::where('id', $relaId)->get()->delete();
     }
 
-    function findFriends($userId): mixed
+    function findFriends(int $userId, bool $toArray = false): Collection|array|null
     {
-        $arrayRelaId = $this->model::where("user_id", $userId)->get(['id']);
-        $arrayFriends = [];
-        foreach ($arrayRelaId as $value) {
-            $friend =
-                $this->model::where("id", $value->id)
-                    ->where('user_id', '!=', $userId)
-                    ->first();
-            $arrayFriends[] = $friend;
-        }
-        return $arrayFriends;
+        $arrayRelaId = array_values($this->model::where("user_id", $userId)->get(['id'])->toArray());
+        return $this->model::whereIn("id", $arrayRelaId)
+            ->where('user_id', '!=', $userId)
+            ->get();
     }
 
-    function isfriend($userId1, $userId2): mixed
+    function isFriend(int $userId1, int $userId2): bool
     {
         $arrayRelaId = $this->model::where('user_id', $userId1)->get(['id']);
 
-        $isFriend =
+        return
             $this->model::whereIn('id', $arrayRelaId)
-                        ->where('user_id', $userId2)
-                        ->exists();
-        if ($isFriend) {
-            return ["status" => true];
-        }
-        return ["status" => false];
+                ->where('user_id', $userId2)
+                ->exists();
     }
 }
