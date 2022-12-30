@@ -1,28 +1,27 @@
 <?php
+
 namespace App\Traits;
 
+use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-trait ApiResponse {
-    public function responseSuccess($message = "Successful!", $status=Response::HTTP_OK): array {
-        return [
-            "message" => $message,
-            "status" => $status
-        ];
-    }
-    public function responseSuccessWithData(mixed $data, string $message = "Successful!", int $status=Response::HTTP_OK): array
+trait ApiResponse
+{
+    public function responseSuccess($message = "Successful!", $status = Response::HTTP_OK): JsonResponse
     {
-        return [
+        return response()->json(["message" => $message], $status);
+    }
+
+    public function responseSuccessWithData(mixed $data, string $message = "Successful!", int $status = Response::HTTP_OK): JsonResponse
+    {
+        return response()->json([
             "message" => $message,
-            "status" => $status,
             "data" => $data
-        ];
+        ], $status);
     }
-    public function responseError(array $errors = [], int $status=Response::HTTP_BAD_REQUEST): array
+
+    public function responseError(array $errors = [], int $status = Response::HTTP_BAD_REQUEST): JsonResponse
     {
-        return [
-            "errors" => $errors,
-            "status" => $status
-        ];
+        return response()->json(["errors" => $errors,], $status);
     }
 }
