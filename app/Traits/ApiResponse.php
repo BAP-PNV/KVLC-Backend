@@ -20,8 +20,17 @@ trait ApiResponse
         ], $status);
     }
 
-    public function responseError(string $message, array $errors = [], int $status = Response::HTTP_BAD_REQUEST): JsonResponse
+    public function responseError(string $message, int $status = Response::HTTP_BAD_REQUEST): JsonResponse
     {
-        return response()->json(["message" => $message, "errors" => $errors], $status);
+        return response()->json(compact("message"), $status);
+    }
+    public function responseErrorWithDetails(string $message, array $errors = [], int $status = Response::HTTP_BAD_REQUEST): JsonResponse {
+        return response()->json(
+            [
+                "message" => $message,
+                "errors" => $errors
+            ],
+            $status
+        );
     }
 }
