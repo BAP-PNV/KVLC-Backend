@@ -9,8 +9,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class User extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $table = "users";
-    protected $fillable = ['email', 'fullname', 'password','status'];
     public function friendRelationships()
     {
         return $this->hasMany(\App\Models\FriendRelationship::class);
