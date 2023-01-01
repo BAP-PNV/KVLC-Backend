@@ -6,10 +6,12 @@ use App\Services\Implements\AuthService;
 use App\Services\Implements\JWTService;
 use App\Services\Implements\MailService;
 use App\Services\Implements\OTPService;
+use App\Services\Implements\RedisService;
 use App\Services\Interfaces\IAuthService;
 use App\Services\Interfaces\IJWTService;
 use App\Services\Interfaces\IMailService;
 use App\Services\Interfaces\IOTPService;
+use App\Services\Interfaces\IRedisService;
 use Illuminate\Support\ServiceProvider;
 
 class ServiceLayerProvider extends ServiceProvider
@@ -36,6 +38,10 @@ class ServiceLayerProvider extends ServiceProvider
         $this->app->singleton(
             IOTPService::class,
             OTPService::class
+        );
+        $this->app->singleton(
+            IRedisService::class,
+            RedisService::class
         );
     }
 
