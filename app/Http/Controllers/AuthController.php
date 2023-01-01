@@ -14,15 +14,26 @@ class AuthController extends Controller
     {
         $email = $request->input("email");
         $password = $request->input("password");
-        $response = $this->authService->login($email, $password);
-        if ($response) {
-            return $this->responseSuccessWithData(
+        $responseData = $this->authService->login($email, $password);
+        if ($responseData) {
+            $accessToken = $responseData["accessToken"];
+            $response = $this->responseSuccessWithData(
                 "login.successful",
-                $response
+                compact("accessToken")
             );
+            $refreshTokenCookie = cookie(
+                "refresh-token",
+                $responseData["refreshToken"],
+                env("REFRESH_TOKEN_EXPIRED_TIME")/(60*1000),
+                "/api/auth/",
+                null,
+                true
+            );
+            $response->cookie($refreshTokenCookie);
+            return $response;
         }
         return $this->responseErrorWithDetails(
-            "login.fails",
+            "login.failed",
             ["error" => "Email or password wrong!"],
             Response::HTTP_UNAUTHORIZED
         );
