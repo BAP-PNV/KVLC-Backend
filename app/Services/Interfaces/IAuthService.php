@@ -13,5 +13,6 @@ interface IAuthService
      * @return array decoded json of the token.
      */
     public function refreshToken(string $token): array;
+    public function getAccessAndRefreshToken(int $userId): array;
 
 }
