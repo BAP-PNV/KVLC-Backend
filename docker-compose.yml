@@ -24,7 +24,7 @@ services:
     ports:
       - 8000:80
     networks:
-      - laravel-net 
+      - laravel-net
   db:
     image: mysql:latest
     container_name: db
@@ -37,7 +37,22 @@ services:
       - 3307:3306
     networks:
       - laravel-net
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    ports:
+      - 6379:6379
+    command: redis-server --save 60 1 --loglevel warning
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - laravel-net
+    volumes:
+      - cache:/data
 networks:
   laravel-net:
     driver: bridge
-   
+volumes:
+  cache:
+    driver: local
