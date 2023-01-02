@@ -10,23 +10,23 @@ use App\Traits\ApiResponse;
 use App\Utils\CookieGenerator;
 use App\Utils\RequestUtils;
 use Closure;
-use Firebase\JWT\ExpiredException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Password;
+use LogicException;
+use UnexpectedValueException;
 
 class AuthMiddleware
 {
     use ApiResponse;
+
     public function __construct(
         private readonly IJWTService   $jwtService,
         private readonly IRedisService $redisService,
-        private readonly IAuthService $authService
+        private readonly IAuthService  $authService
     )
-    {
-    }
+    {}
 
     /**
      * Handle an incoming request.
@@ -39,57 +39,37 @@ class AuthMiddleware
     {
         $path = $request->path();
         if ($this->isLogin($path)) {
-            $loginResult = $this->regenerateTokensBaseOnRFToken($request);
-            if ($loginResult) return $loginResult;
+            $decodedRefreshToken = $this->checkRefreshToken($request);
+            if ($decodedRefreshToken) {
+                ["uid" => $userId] = $decodedRefreshToken;
+                return $this->loginHandle($userId);
+            }
             return $next($request);
         }
         // handle path /api/
         if ($this->checkAccessToken($request)) {
             return $next($request);
         }
-        $response = $this->regenerateTokensBaseOnRFToken($request);
-        if ($response) return $response;
+        $decodedRefreshToken = $this->checkRefreshToken($request);
+        if ($decodedRefreshToken) {
+            ["uid" => $userId] = $decodedRefreshToken;
+            $request->tokens = $this->authService->getAccessAndRefreshToken($userId);
+            return $next($request);
+        }
+
         return $this->responseErrorWithDetails(
             "re-login.required",
             ["error" => "Token invalid! Please re-login!"]
         );
     }
-    private function isLogin(string $path): bool {
+
+    private function isLogin(string $path): bool
+    {
         return str_contains($path, "auth/login");
     }
-    /**
-     * Handle an incoming request.
-     *
-     * @param Request $request
-     * @return JsonResponse|null
-     */
-    private function regenerateTokensBaseOnRFToken(Request $request): JsonResponse|null {
-        $decodedRefreshToken = $this->checkRefreshToken($request);
-        if ($decodedRefreshToken) {
-            ["uid" => $userId] = $decodedRefreshToken;
-            // get new tokens
-            ["accessToken" => $newAccessToken, "refreshToken" => $newRefreshToken] = $this->authService->getAccessAndRefreshToken($userId);
 
-            $response = $this->responseSuccessWithData(
-                "login.successful.viaRF",
-                ["accessToken" => $newAccessToken]
-            );
-            $refreshTokenCookie = CookieGenerator::generateRefreshTokenCookie($newRefreshToken);
-            return $response->cookie($refreshTokenCookie);
-        }
-        return null;
-    }
-    private function checkAccessToken(Request $request): bool {
-        $accessToken = RequestUtils::getAccessTokenFromRequest($request);
-        if ($accessToken) {
-            try {
-                $this->jwtService->verifyToken($accessToken, TokenType::ACCESS_TOKEN);
-                return true;
-            } catch (\UnexpectedValueException|\LogicException $e) {}
-        }
-        return false;
-    }
-    private function checkRefreshToken(Request $request): array|bool {
+    private function checkRefreshToken(Request $request): array|bool
+    {
         $refreshToken = $request->cookie("refresh-token");
         if ($refreshToken) {
             try {
@@ -100,10 +80,39 @@ class AuthMiddleware
                     return false;
                 }
                 return $decodedRF;
-            }
-            catch (\UnexpectedValueException|\LogicException $e) {
+            } catch (UnexpectedValueException|LogicException $e) {
             }
         }
         return false;
+    }
+    private function checkAccessToken(Request $request): bool
+    {
+        $accessToken = RequestUtils::getAccessTokenFromRequest($request);
+        if ($accessToken) {
+            try {
+                $this->jwtService->verifyToken($accessToken, TokenType::ACCESS_TOKEN);
+                return true;
+            } catch (UnexpectedValueException|LogicException $e) {
+            }
+        }
+        return false;
+    }
+    /**
+     * Handle an incoming request.
+     *
+     * @param int $userId
+     * @return JsonResponse
+     */
+    private function loginHandle(int $userId): JsonResponse
+    {
+        // get new tokens
+        ["accessToken" => $newAccessToken, "refreshToken" => $newRefreshToken] = $this->authService->getAccessAndRefreshToken($userId);
+
+        $response = $this->responseSuccessWithData(
+            "login.successful.viaRF",
+            ["accessToken" => $newAccessToken]
+        );
+        $refreshTokenCookie = CookieGenerator::generateRefreshTokenCookie($newRefreshToken);
+        return $response->cookie($refreshTokenCookie);
     }
 }
