@@ -53,29 +53,29 @@ class Handler extends ExceptionHandler
                 "exception.common.query"
             );
         });
-        $this->renderable(function (ExpiredException $e, $req) {
-            return $this->responseError(
-                "exception.common.token.expired",
-                Response::HTTP_UNAUTHORIZED
-            );
-        });
-        $this->renderable(function (SignatureInvalidException $e, $req) {
-            return $this->responseError(
-                "exception.common.token.invalid-signature",
-                Response::HTTP_UNAUTHORIZED
-            );
-        });
-        $this->renderable(function (\DomainException $e, $req) {
-            return $this->responseError(
-                "exception.common.token.validate-wrong",
-                Response::HTTP_UNAUTHORIZED
-            );
-        });
-        $this->renderable(function (\InvalidArgumentException $e, $req) {
-            return $this->responseError(
-                "exception.common.token.wrong-key",
-                Response::HTTP_UNAUTHORIZED
-            );
-        });
+//        $this->renderable(function (ExpiredException $e, $req) {
+//            return $this->responseError(
+//                "exception.common.token.expired",
+//                Response::HTTP_UNAUTHORIZED
+//            );
+//        });
+//        $this->renderable(function (SignatureInvalidException $e, $req) {
+//            return $this->responseError(
+//                "exception.common.token.invalid-signature",
+//                Response::HTTP_UNAUTHORIZED
+//            );
+//        });
+//        $this->renderable(function (\DomainException $e, $req) {
+//            return $this->responseError(
+//                "exception.common.token.validate-wrong",
+//                Response::HTTP_UNAUTHORIZED
+//            );
+//        });
+//        $this->renderable(function (\InvalidArgumentException $e, $req) {
+//            return $this->responseError(
+//                "exception.common.token.wrong-key",
+//                Response::HTTP_UNAUTHORIZED
+//            );
+//        });
     }
 }
