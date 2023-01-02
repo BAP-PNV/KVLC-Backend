@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AuthRequest;
 use App\Services\Interfaces\IAuthService;
+use App\Utils\CookieGenerator;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -14,23 +15,15 @@ class AuthController extends Controller
     {
         $email = $request->input("email");
         $password = $request->input("password");
-        $responseData = $this->authService->login($email, $password);
-        if ($responseData) {
-            $accessToken = $responseData["accessToken"];
+        $loginData = $this->authService->login($email, $password);
+        if ($loginData) {
+            ["accessToken" => $accessToken, "refreshToken" => $refreshToken] = $loginData;
             $response = $this->responseSuccessWithData(
                 "login.successful",
                 compact("accessToken")
             );
-            $refreshTokenCookie = cookie(
-                "refresh-token",
-                $responseData["refreshToken"],
-                env("REFRESH_TOKEN_EXPIRED_TIME")/(60*1000),
-                "/api/auth/",
-                null,
-                true
-            );
-            $response->cookie($refreshTokenCookie);
-            return $response;
+            $refreshTokenCookie = CookieGenerator::generateRefreshTokenCookie($refreshToken);
+            return $response->cookie($refreshTokenCookie);
         }
         return $this->responseErrorWithDetails(
             "login.failed",

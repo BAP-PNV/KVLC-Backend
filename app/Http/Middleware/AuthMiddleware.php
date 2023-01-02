@@ -7,6 +7,7 @@ use App\Services\Interfaces\IJWTService;
 use App\Services\Interfaces\IRedisService;
 use App\Services\Interfaces\TokenType;
 use App\Traits\ApiResponse;
+use App\Utils\CookieGenerator;
 use App\Utils\RequestUtils;
 use Closure;
 use Firebase\JWT\ExpiredException;
@@ -14,6 +15,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Password;
 
 class AuthMiddleware
 {
@@ -62,30 +64,18 @@ class AuthMiddleware
      * @return JsonResponse|null
      */
     private function regenerateTokensBaseOnRFToken(Request $request): JsonResponse|null {
-        $refreshToken = $request->cookie("refresh-token");
-        if ($refreshToken ) {
-            try {
-                ["uid" => $userId]= $this->jwtService->verifyToken($refreshToken, TokenType::REFRESH_TOKEN);
-                $storedRefreshToken = $this->redisService->getRefreshTokenByUserId($userId);
-                if ($storedRefreshToken ==  null || $refreshToken != $storedRefreshToken) {
-                    return null;
-                }
-                ["accessToken" => $newAccessToken, "refreshToken" => $newRefreshToken] = $this->authService->getAccessAndRefreshToken($userId);
+        $decodedRefreshToken = $this->checkRefreshToken($request);
+        if ($decodedRefreshToken) {
+            ["uid" => $userId] = $decodedRefreshToken;
+            // get new tokens
+            ["accessToken" => $newAccessToken, "refreshToken" => $newRefreshToken] = $this->authService->getAccessAndRefreshToken($userId);
 
-                $response = $this->responseSuccessWithData(
-                    "login.successful.viaRF",
-                    ["accessToken" => $newAccessToken]
-                );
-                $refreshTokenCookie = cookie(
-                    "refresh-token",
-                    $newRefreshToken,
-                    env("REFRESH_TOKEN_EXPIRED_TIME")/(60*1000),
-                    "/api/auth/",
-                    null,
-                    true
-                );
-                return $response->cookie($refreshTokenCookie);
-            } catch (\UnexpectedValueException $e) {}
+            $response = $this->responseSuccessWithData(
+                "login.successful.viaRF",
+                ["accessToken" => $newAccessToken]
+            );
+            $refreshTokenCookie = CookieGenerator::generateRefreshTokenCookie($newRefreshToken);
+            return $response->cookie($refreshTokenCookie);
         }
         return null;
     }
@@ -95,8 +85,23 @@ class AuthMiddleware
             try {
                 $this->jwtService->verifyToken($accessToken, TokenType::ACCESS_TOKEN);
                 return true;
-            } catch (\UnexpectedValueException $e) {
-
+            } catch (\UnexpectedValueException|\LogicException $e) {}
+        }
+        return false;
+    }
+    private function checkRefreshToken(Request $request): array|bool {
+        $refreshToken = $request->cookie("refresh-token");
+        if ($refreshToken) {
+            try {
+                $decodedRF = $this->jwtService->verifyToken($refreshToken, TokenType::REFRESH_TOKEN);
+                ["uid" => $userId] = $decodedRF;
+                $storedRefreshToken = $this->redisService->getRefreshTokenByUserId($userId);
+                if ($storedRefreshToken == null || $refreshToken != $storedRefreshToken) {
+                    return false;
+                }
+                return $decodedRF;
+            }
+            catch (\UnexpectedValueException|\LogicException $e) {
             }
         }
         return false;
