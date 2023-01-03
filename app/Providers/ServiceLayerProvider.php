@@ -2,11 +2,13 @@
 
 namespace App\Providers;
 
+use App\Services\Implements\AccountService;
 use App\Services\Implements\AuthService;
 use App\Services\Implements\JWTService;
 use App\Services\Implements\MailService;
 use App\Services\Implements\OTPService;
 use App\Services\Implements\RedisService;
+use App\Services\Interfaces\IAccountService;
 use App\Services\Interfaces\IAuthService;
 use App\Services\Interfaces\IJWTService;
 use App\Services\Interfaces\IMailService;
@@ -42,6 +44,10 @@ class ServiceLayerProvider extends ServiceProvider
         $this->app->singleton(
             IRedisService::class,
             RedisService::class
+        );
+        $this->app->singleton(
+            IAccountService::class,
+            AccountService::class
         );
     }
 
