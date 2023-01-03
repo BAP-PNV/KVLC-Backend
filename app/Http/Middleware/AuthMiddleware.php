@@ -38,6 +38,9 @@ class AuthMiddleware
     public function handle(Request $request, Closure $next): Response|RedirectResponse|JsonResponse
     {
         $path = $request->path();
+        if ($this->isRegister($path)) {
+            return $next($request);
+        }
         if ($this->isLogin($path)) {
             $decodedRefreshToken = $this->checkRefreshToken($request);
             if ($decodedRefreshToken) {
@@ -67,7 +70,9 @@ class AuthMiddleware
     {
         return str_contains($path, "auth/login");
     }
-
+    private function isRegister(string $path): bool {
+        return str_contains($path, "account/register");
+    }
     private function checkRefreshToken(Request $request): array|bool
     {
         $refreshToken = $request->cookie("refresh-token");
