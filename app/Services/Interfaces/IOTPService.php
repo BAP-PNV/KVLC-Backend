@@ -1,7 +1,9 @@
 <?php
 namespace App\Services\Interfaces;
+use App\Models\User;
+
 interface IOTPService
 {
-    public function sendOTP(string $mailTo, int $otp);
+    public function sendOTP(User $user, int $otp);
     public function validateOTP(string $email, int $otp);
 }
