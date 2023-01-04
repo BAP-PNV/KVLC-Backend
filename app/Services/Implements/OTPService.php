@@ -2,6 +2,7 @@
 
 namespace App\Services\Implements;
 
+use App\Models\User;
 use App\Services\Interfaces\IMailService;
 use App\Services\Interfaces\IOTPService;
 use App\Services\Interfaces\MailType;
@@ -15,9 +16,10 @@ class OTPService implements IOTPService
         $this->mailService = $mailService;
     }
 
-    public function sendOTP(string $mailTo, int $otp)
+    public function sendOTP(User $user, int $otp)
     {
-        $this->mailService->sendMail(MailType::OTP_MAIL, );
+        $this->mailService->sendMail(MailType::OTP_MAIL, compact("user", "otp"));
+
     }
 
     public function validateOTP(string $email, int $otp)

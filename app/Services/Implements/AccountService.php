@@ -13,10 +13,12 @@ class AccountService implements  IAccountService {
     )
     {}
 
-    public function register($data): array
+    public function register(array $data): array
       {
+
           $data['full_name'] = $data['fullName'];
           $data['password'] = Hash::make($data['password']);
+          $data['status'] = 0;
           $this->userRepository->create($data);
           return ["fullName" => $data["full_name"], "email" => $data["email"]];
       }

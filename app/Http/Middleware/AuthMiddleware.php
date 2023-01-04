@@ -38,7 +38,7 @@ class AuthMiddleware
     public function handle(Request $request, Closure $next): Response|RedirectResponse|JsonResponse
     {
         $path = $request->path();
-        if ($this->isRegister($path)) {
+        if ($this->isRegister($path) || $this->isConfirmRegistration($path)) {
             return $next($request);
         }
         if ($this->isLogin($path)) {
@@ -72,6 +72,9 @@ class AuthMiddleware
     }
     private function isRegister(string $path): bool {
         return str_contains($path, "account/register");
+    }
+    private function isConfirmRegistration(string $path): bool {
+        return str_contains($path,"account/confirm-registration");
     }
     private function checkRefreshToken(Request $request): array|bool
     {

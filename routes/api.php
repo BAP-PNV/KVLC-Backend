@@ -21,5 +21,6 @@ Route::controller(AuthController::class)->prefix("/auth/")->group(function () {
 
 Route::controller(\App\Http\Controllers\RegisterController::class)->prefix("/account/")->group(function () {
     Route::post("register", "register");
+    Route::post("confirm-registration","confirmRegistration");
 });
 
