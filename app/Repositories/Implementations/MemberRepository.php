@@ -19,13 +19,13 @@ class MemberRepository extends BaseRepository implements IMemberRepository
         return $this->model::where("con_id", $id)->get();
     }
 
-    public function getDisplayName($conversationId, $memberId): string|null
+    public function getDisplayName($conversationId, $memberId): ?string
     {
         $user = $this
                 ->model
                 ->where("con_id", $conversationId)
                 ->where("user_id", $memberId)
-                ->get();
+                ->first();
         return is_null($user) ? null : $user->display_name;
     }
 
@@ -35,7 +35,7 @@ class MemberRepository extends BaseRepository implements IMemberRepository
                 ->model
                 ->where("user_id", $memberId)
                 ->where("con_id", $conversationId)
-                ->get();
+                ->first();
         return !!$user;
     }
 
