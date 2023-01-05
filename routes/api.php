@@ -24,3 +24,8 @@ Route::controller(\App\Http\Controllers\RegisterController::class)->prefix("/acc
     Route::post("confirm-registration","confirmRegistration");
 });
 
+Route::controller(\App\Http\Controllers\FriendController::class)->prefix("/friend/")->group(function () {
+    Route::post("add", "addFriend");
+});
+
+
