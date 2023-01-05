@@ -38,7 +38,7 @@ class RegisterController extends Controller
 
             if($optConfirm == null){
                 return $this->responseError(
-                    "Email chưa được đăng ký  !",
+                    "Email not sign up !",
                     Response::HTTP_BAD_REQUEST,
                 );
             }
