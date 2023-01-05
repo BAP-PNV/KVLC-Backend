@@ -2,14 +2,17 @@
 
 namespace App\Providers;
 
+use App\Http\Controllers\FriendController;
 use App\Services\Implements\AccountService;
 use App\Services\Implements\AuthService;
+use App\Services\Implements\FriendService;
 use App\Services\Implements\JWTService;
 use App\Services\Implements\MailService;
 use App\Services\Implements\OTPService;
 use App\Services\Implements\RedisService;
 use App\Services\Interfaces\IAccountService;
 use App\Services\Interfaces\IAuthService;
+use App\Services\Interfaces\IFriendService;
 use App\Services\Interfaces\IJWTService;
 use App\Services\Interfaces\IMailService;
 use App\Services\Interfaces\IOTPService;
@@ -48,6 +51,10 @@ class ServiceLayerProvider extends ServiceProvider
         $this->app->singleton(
             IAccountService::class,
             AccountService::class
+        );
+        $this->app->singleton(
+            IFriendService::class,
+            FriendService::class
         );
     }
 
