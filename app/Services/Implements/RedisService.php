@@ -12,6 +12,7 @@ class RedisService implements IRedisService
     public function setRefreshTokenWithUserId(int $userId, string $token): void
     {
         Redis::set("Refresh:$userId", $token);
+        Redis::expire("Refresh:$userId", 10);
     }
 
     public function getRefreshTokenByUserId(int $userId): string|null
