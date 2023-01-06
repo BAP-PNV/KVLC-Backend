@@ -20,7 +20,7 @@ class UserRepository extends BaseRepository implements \App\Repositories\Interfa
     public function getInfo(string $userId): mixed
     {
         $info = $this->model->find($userId, ["id", "full_name", "email"]);
-        return $info ? $info : null;
+        return $info ? : null;
     }
     public function findUser(string $searchText): mixed
     {
