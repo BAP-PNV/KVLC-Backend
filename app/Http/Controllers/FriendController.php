@@ -22,13 +22,17 @@ class FriendController extends Controller
         $search = $request->input('q');
         $findFriend = $this->friendService->findFriend($userId,$search);
         return$findFriend;
-
     }
     public function unFriend(Request $request){
         $userIdWant = $request->input('userIdWant');
         $userIdBe = $request ->input('userIdBe');
-        $unFriend = $this->friendService->unFriend($userIdWant,$userIdBe);
-        return $unFriend;
+        if($this->friendService->unFriend($userIdWant,$userIdBe)){
+            return $this->responseSuccess(
+                "unFriend successfully!",
+                Response::HTTP_OK
+            );
+        };
+        return $this->responseError("We are not friend",  $status = Response::HTTP_BAD_REQUEST);
     }
     public function addFriend(Request $request)
     {

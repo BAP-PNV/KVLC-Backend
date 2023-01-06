@@ -25,9 +25,9 @@ class FriendService implements IFriendService
        $relaId = $this->userRelationship->findIdRelationship($userIdWant,$userIdBe);
        if($relaId){
            $this->userRelationship->unFriend($relaId);
-           return ["message"=>"unfriend successfully"];
+           return true;
        }
-       return ["message"=>"unfriend error"];
+       return false;
    }
 
 
