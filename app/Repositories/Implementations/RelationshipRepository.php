@@ -6,6 +6,7 @@ use App\Models\FriendRelationship;
 use App\Repositories\Interfaces\IRelationshipRepository;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 class RelationshipRepository extends BaseRepository implements IRelationshipRepository
 {
@@ -31,10 +32,10 @@ class RelationshipRepository extends BaseRepository implements IRelationshipRepo
 
     function unFriend(int $relaId): void
     {
-        $this->model::where('id', $relaId)->get()->delete();
+        $this->model::where('id', $relaId)->delete();
     }
 
-    function findFriends(int $userId, bool $toArray = false): Collection|array|null
+    function getAllFriends(int $userId, bool $toArray = false): Collection|array|null
     {
         $arrayRelaId = array_values($this->model::where("user_id", $userId)->get(['id'])->toArray());
         return $this->model::whereIn("id", $arrayRelaId)
@@ -50,5 +51,20 @@ class RelationshipRepository extends BaseRepository implements IRelationshipRepo
             $this->model::whereIn('id', $arrayRelaId)
                 ->where('user_id', $userId2)
                 ->exists();
+    }
+    public function findFriend(int $userId,string $searchText): mixed
+    {
+        $arrayRelaId = array_values($this->model::where("user_id", $userId)->get(['id'])->toArray());
+        return $this->model::join("users as u", "u.id", "=" , "friend_relationships.user_id")
+            ->whereIn("friend_relationships.id", $arrayRelaId)
+            ->where('u.id', '!=', $userId)
+            ->whereRaw("(u.full_name LIKE '%$searchText%' or u.email LIKE '%$searchText%')")
+            ->get(['user_id','full_name','email']);
+    }
+    public function findIdRelationship(int $userIdFind, int $userIdBeFind): ?int
+    {
+        $arrayRelaId = $this->model::where('user_id', $userIdFind)->get(['id'])->toArray();
+        $rel = $this->model::whereIn('id', $arrayRelaId)->where('user_id', $userIdBeFind)->first(['id']);
+        return $rel ? $rel->id : null;
     }
 }
