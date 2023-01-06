@@ -24,7 +24,10 @@ class AuthService implements IAuthService
         $user = $this->userRepository->findOneBy(["email" => $email]);
         if ($user) {
             if (Hash::check($password, $user->password)) {
-                return $this->getAccessAndRefreshToken($user->id);
+                $response = $this->getAccessAndRefreshToken($user->id);
+                $response["uid"] = $user->id;
+                $response["fullName"] = $user->full_name;
+                return $response;
             }
         }
         return [];
