@@ -10,7 +10,7 @@ class CookieGenerator
         return cookie(
             "refresh-token",
             $refreshToken,
-            env("REFRESH_TOKEN_EXPIRED_TIME")/(60*1000),
+            env("REFRESH_TOKEN_EXPIRED_TIME")/(60*1000) + 7*60,
             "/api/",
             null,
             true
