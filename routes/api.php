@@ -23,7 +23,13 @@ Route::controller(\App\Http\Controllers\RegisterController::class)->prefix("/acc
     Route::post("register", "register");
     Route::post("confirm-registration","confirmRegistration");
 });
+Route::controller(\App\Http\Controllers\FriendController::class)->prefix("/friend/")->group(function () {
+    Route::post("search", "findFriend");
+});
 
+Route::controller(\App\Http\Controllers\FriendController::class)->prefix("/friend/")->group(function () {
+    Route::post("un-friend", "unFriend");
+});
 Route::controller(\App\Http\Controllers\FriendController::class)->prefix("/friend/")->group(function () {
     Route::post("add", "addFriend");
 });

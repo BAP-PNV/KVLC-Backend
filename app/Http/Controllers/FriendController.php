@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+
+
 use App\Services\Interfaces\IFriendService;
+
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -12,6 +15,25 @@ class FriendController extends Controller
         private readonly IFriendService $friendService
     )
     {}
+
+
+    public function findFriend(Request $request){
+        $userId = $request->input('id');
+        $search = $request->input('q');
+        $findFriend = $this->friendService->findFriend($userId,$search);
+        return$findFriend;
+    }
+    public function unFriend(Request $request){
+        $userIdWant = $request->input('userIdWant');
+        $userIdBe = $request ->input('userIdBe');
+        if($this->friendService->unFriend($userIdWant,$userIdBe)){
+            return $this->responseSuccess(
+                "unFriend successfully!",
+                Response::HTTP_OK
+            );
+        };
+        return $this->responseError("We are not friend",  $status = Response::HTTP_BAD_REQUEST);
+    }
     public function addFriend(Request $request)
     {
         $userWantAdd = $request->input("userWantAdd");
@@ -28,4 +50,6 @@ class FriendController extends Controller
 
 
     }
+
+
 }
