@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Repositories\Interfaces\IUserRepository;
 use App\Services\Interfaces\IAuthService;
 use App\Services\Interfaces\IJWTService;
 use App\Services\Interfaces\IRedisService;
@@ -24,7 +25,8 @@ class AuthMiddleware
     public function __construct(
         private readonly IJWTService   $jwtService,
         private readonly IRedisService $redisService,
-        private readonly IAuthService  $authService
+        private readonly IAuthService  $authService,
+        private readonly IUserRepository $userRepository
     )
     {}
 
@@ -115,10 +117,10 @@ class AuthMiddleware
     {
         // get new tokens
         ["accessToken" => $newAccessToken, "refreshToken" => $newRefreshToken] = $this->authService->getAccessAndRefreshToken($userId);
-
+        $user = $this->userRepository->getInfo($userId);
         $response = $this->responseSuccessWithData(
             "login.successful.viaRF",
-            ["accessToken" => $newAccessToken]
+            ["accessToken" => $newAccessToken, "uid" => $userId, "fullName" => $user->full_name]
         );
         $refreshTokenCookie = CookieGenerator::generateRefreshTokenCookie($newRefreshToken);
         return $response->cookie($refreshTokenCookie);

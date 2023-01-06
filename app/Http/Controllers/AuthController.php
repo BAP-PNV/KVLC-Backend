@@ -17,10 +17,10 @@ class AuthController extends Controller
         $password = $request->input("password");
         $loginData = $this->authService->login($email, $password);
         if ($loginData) {
-            ["accessToken" => $accessToken, "refreshToken" => $refreshToken] = $loginData;
+            ["accessToken" => $accessToken, "refreshToken" => $refreshToken, "uid" => $uid, "fullName" => $fullName] = $loginData;
             $response = $this->responseSuccessWithData(
                 "login.successful",
-                compact("accessToken")
+                compact("accessToken", "uid", "fullName")
             );
             $refreshTokenCookie = CookieGenerator::generateRefreshTokenCookie($refreshToken);
             return $response->cookie($refreshTokenCookie);
