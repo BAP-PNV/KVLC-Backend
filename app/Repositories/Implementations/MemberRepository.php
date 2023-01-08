@@ -38,9 +38,23 @@ class MemberRepository extends BaseRepository implements IMemberRepository
                 ->first();
         return !!$user;
     }
+    public function hasConversation(int $userId1, int $userId2): bool
+    {
+        $conArr = $this->model::where("user_id", $userId1)->get(["con_id"])->toArray();
+        return $this->model::where("user_id", $userId2)
+            ->whereIn("con_id", $conArr)
+            ->exists();
+    }
 
     public function delete($id): mixed
     {
        return $this->model->where("con_id", $id)->delete();
+    }
+
+    public function deleteMemberFromConversation(int $memberId, int $conId): void
+    {
+        $this->model::where("con_id", $conId)
+                    ->where("user_id", $memberId)
+                    ->delete();
     }
 }
