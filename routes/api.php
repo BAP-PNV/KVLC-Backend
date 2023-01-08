@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ConversationController;
+use App\Http\Controllers\FriendController;
+use App\Http\Controllers\RegisterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,19 +22,18 @@ Route::controller(AuthController::class)->prefix("/auth/")->group(function () {
     Route::post("login", "login");
 });
 
-Route::controller(\App\Http\Controllers\RegisterController::class)->prefix("/account/")->group(function () {
+Route::controller(RegisterController::class)->prefix("/account/")->group(function () {
     Route::post("register", "register");
     Route::post("confirm-registration","confirmRegistration");
 });
-Route::controller(\App\Http\Controllers\FriendController::class)->prefix("/friend/")->group(function () {
+Route::controller(FriendController::class)->prefix("/friend/")->group(function () {
     Route::post("search", "findFriend");
-});
-
-Route::controller(\App\Http\Controllers\FriendController::class)->prefix("/friend/")->group(function () {
+    Route::post("add", "addFriend");
     Route::post("un-friend", "unFriend");
 });
-Route::controller(\App\Http\Controllers\FriendController::class)->prefix("/friend/")->group(function () {
-    Route::post("add", "addFriend");
+Route::controller(ConversationController::class)->prefix("/conversation/")->group(function () {
+    Route::post("add", "addNewConversation");
+    Route::post("leave", "leaveConversation");
 });
 
 
