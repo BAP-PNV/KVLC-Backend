@@ -15,8 +15,9 @@ return new class extends Migration
     {
         Schema::create('conversations', function (Blueprint $table) {
             $table->increments("id")->from(1000000);
-            $table->string("group_name");
+            $table->string("group_name")->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
