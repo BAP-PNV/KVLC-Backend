@@ -12,12 +12,12 @@ class UserRepository extends BaseRepository implements \App\Repositories\Interfa
         return User::class;
     }
 
-    public function ban(string $userId): mixed
+    public function ban(int $userId): mixed
     {
         return $this->model->find($userId)->trashed();
     }
 
-    public function getInfo(string $userId): mixed
+    public function getInfo(int $userId): mixed
     {
         $info = $this->model->find($userId, ["id", "full_name", "email"]);
         return $info ? : null;
