@@ -24,10 +24,8 @@ class UserRepository extends BaseRepository implements \App\Repositories\Interfa
     }
     public function findUser(string $searchText): mixed
     {
-
-        $user_id = User::select("id", "full_name", "email")
+        return User::select("id", "full_name", "email")
         ->Where("full_name", "LIKE","%$searchText%")
-        ->orWhere("email", "LIKE","%$searchText%")->get()->toArray();
-        return $user_id;
+        ->orWhere("email", "LIKE","%$searchText%")->get();
     }
 }

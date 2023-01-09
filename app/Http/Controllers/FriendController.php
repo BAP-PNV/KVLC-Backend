@@ -16,12 +16,14 @@ class FriendController extends Controller
     )
     {}
 
-
+    public function findStrangers(Request $request) {
+        $q = $request->input("q");
+        return $this->friendService->findStrangers($q, true);
+    }
     public function findFriend(Request $request){
         $userId = $request->input('id');
         $search = $request->input('q');
-        $findFriend = $this->friendService->findFriend($userId,$search);
-        return$findFriend;
+        return $this->friendService->findFriend($userId,$search);
     }
     public function unFriend(Request $request){
         $userIdWant = $request->input('userIdWant');
@@ -46,10 +48,5 @@ class FriendController extends Controller
             );
         }
         return  $this->responseError("We are a friend",  $status = Response::HTTP_BAD_REQUEST);
-
-
-
     }
-
-
 }
