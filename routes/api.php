@@ -28,6 +28,7 @@ Route::controller(RegisterController::class)->prefix("/account/")->group(functio
     Route::post("confirm-registration","confirmRegistration");
 });
 Route::controller(FriendController::class)->prefix("/friend/")->group(function () {
+    Route::post("strangers", "findStranger");
     Route::get("search", "findFriend");
     Route::post("add", "addFriend");
     Route::post("un-friend", "unFriend");

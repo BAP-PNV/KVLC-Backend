@@ -2,13 +2,20 @@
 
 namespace App\Services\Implements;
 use App\Repositories\Interfaces\IRelationshipRepository;
+use App\Repositories\Interfaces\IUserRepository;
 use App\Services\Interfaces\IFriendService;
+use Illuminate\Database\Eloquent\Collection;
 
 class FriendService implements IFriendService
 {
     public function __construct(
-        private readonly IRelationshipRepository $userRelationship
+        private readonly IRelationshipRepository $userRelationship,
+        private readonly IUserRepository $userRepository
     ){}
+    public function findStrangers(string $searchText, bool $toArray = false): Collection|array{
+        $users = $this->userRepository->findUser($searchText);
+        return $toArray ? $users->toArray() : $users;
+    }
     public function findFriend(int $userId,string $searText): mixed
     {
 
