@@ -39,5 +39,5 @@ Route::controller(ConversationController::class)->prefix("/conversation/")->grou
 Route::controller(MessagesController::class)->prefix("/messages")->group(function () {
    Route::post("", "getMessages");
    Route::post("/edit", "edit");
-   Route::post("/delete", "delete");
+   Route::delete("", "delete");
 });
