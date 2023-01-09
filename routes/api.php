@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\FriendController;
+use App\Http\Controllers\MessagesController;
 use App\Http\Controllers\RegisterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,7 +28,7 @@ Route::controller(RegisterController::class)->prefix("/account/")->group(functio
     Route::post("confirm-registration","confirmRegistration");
 });
 Route::controller(FriendController::class)->prefix("/friend/")->group(function () {
-    Route::post("search", "findFriend");
+    Route::get("search", "findFriend");
     Route::post("add", "addFriend");
     Route::post("un-friend", "unFriend");
 });
@@ -35,5 +36,8 @@ Route::controller(ConversationController::class)->prefix("/conversation/")->grou
     Route::post("add", "addNewConversation");
     Route::post("leave", "leaveConversation");
 });
-
-
+Route::controller(MessagesController::class)->prefix("/messages")->group(function () {
+   Route::post("", "getMessages");
+   Route::post("/edit", "edit");
+   Route::post("/delete", "delete");
+});

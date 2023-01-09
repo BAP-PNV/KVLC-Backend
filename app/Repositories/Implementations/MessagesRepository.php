@@ -30,13 +30,13 @@ class MessagesRepository extends BaseRepository implements IMessagesRepository
         return ($messages ? null : $toArray) ? $messages->toArray() : $messages;
     }
 
-    public function nLatestMessagesOfConversation(int $conversationId, int $offset = 0, int $limit = 10, bool $toArray = false): Collection|array|null
+    public function getMessagesBy(int $conversationId, array $filter = ["offset" => 0, "limit" => 10], bool $toArray = false): Collection|array|null
     {
         $messages =
             $this->model
                 ->where("con_id", $conversationId)
-                ->skip($offset)
-                ->take($limit)
+                ->skip($filter["offset"])
+                ->take($filter["limit"])
                 ->orderBy("created_at", "asc")
                 ->get();
         return ($messages ? null : $toArray) ? $messages->toArray() : $messages;
