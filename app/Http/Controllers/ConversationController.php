@@ -13,6 +13,23 @@ class ConversationController extends Controller
     public function __construct(
         private readonly IConversationService $conversationService
     ){}
+
+    /**
+     * @OA\Post(path="/api/conversation/add", tags={"Conversation"},operationId="addNewConversation",summary="add new conversation",
+     *  @OA\RequestBody(
+     *       @OA\MediaType(
+     *          mediaType="multipart/form-data",
+     *          @OA\Schema(required={"creator","member"},
+     *          @OA\Property(property="creator", type="integer"),
+     *          @OA\Property(property="member", type="integer"),
+     *     )
+     *       )
+     *   ),
+     * @OA\Response (response="200", description="Success"),
+     * @OA\Response (response="404", description="Not Found"),
+     * security={ {"passport":{}}}
+     * )
+     */
     public function addNewConversation(Request $request): JsonResponse
     {
         $creatorId = $request->input("creator");
@@ -42,6 +59,22 @@ class ConversationController extends Controller
                 ["error" => "Has some errors, please try again!"]
             );
     }
+    /**
+     * @OA\Post(path="/api/conversation/leave", tags={"Conversation"},operationId="leaveConversation",summary="leave conversation",
+     *  @OA\RequestBody(
+     *       @OA\MediaType(
+     *          mediaType="multipart/form-data",
+     *          @OA\Schema(required={"conId","uid"},
+     *          @OA\Property(property="conId", type="integer"),
+     *          @OA\Property(property="uid", type="integer"),
+     *     )
+     *       )
+     *   ),
+     * @OA\Response (response="200", description="Success"),
+     * @OA\Response (response="404", description="Not Found"),
+     * security={ {"passport":{}}}
+     * )
+     */
     public function leaveConversation(Request $request): JsonResponse {
         $conId = $request->input("conId");
         $userId = $request->input("uid");
