@@ -16,6 +16,11 @@ class MessagesService implements IMessagesService
     )
     {}
 
+    public function save(int $userId, int $conId, string $content): void {
+        if ($this->memberRepository->isMemberInConversation($userId, $conId)) {
+            $this->messagesRepository->create(["con_id" => $conId, "user_id" => $userId, "content" => $content]);
+        }
+    }
     public function edit(int $userId, int $conId, int $mesId, string $content): bool
     {
         $message = $this->getOneMessageInConversation($mesId, $conId);
