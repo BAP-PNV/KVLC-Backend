@@ -25,9 +25,8 @@ class UserRepository extends BaseRepository implements \App\Repositories\Interfa
 
     public function findUser(string $searchText): mixed
     {
-        $listUser =$this->model->select("id", "full_name", "email")
+        return $listUser =$this->model->select("id", "full_name", "email")
             ->Where("full_name", "LIKE","%$searchText%")
             ->orWhere("email", "LIKE","%$searchText%")->get();
-        return sizeof($listUser)!=0 ? $listUser : [];
     }
 }
