@@ -53,7 +53,7 @@ class ChatService implements MessageComponentInterface
 
                 ["full_name" => $fullName] = $this->userRepository->getInfo($userId);
                 $this->redisService->setFullName($userId, $fullName);
-
+                $this->redisService->setActive($userId);
                 $from->send(json_encode(["connectionId" => $connectionId, "type" => "system"]));
 
                 echo "User {$userId} with connection {$connectionId}\n";
