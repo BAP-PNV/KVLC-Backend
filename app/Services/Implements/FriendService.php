@@ -18,7 +18,7 @@ class FriendService implements IFriendService
     public function findFriend(int $userId,string $searText): mixed
     {
 
-        $friend = $this->userRelationship->findFriend($userId,$searText);
+        $friend = $this->relationshipRepository->findFriend($userId,$searText);
         if ($friend){
             return $friend;
         }
@@ -28,9 +28,9 @@ class FriendService implements IFriendService
     }
    public function unFriend(int $userIdWant, int $userIdBe): mixed
    {
-       $relaId = $this->userRelationship->findIdRelationship($userIdWant,$userIdBe);
+       $relaId = $this->relationshipRepository->findIdRelationship($userIdWant,$userIdBe);
        if($relaId){
-           $this->userRelationship->unFriend($relaId);
+           $this->relationshipRepository->unFriend($relaId);
            return true;
        }
        return false;
@@ -39,8 +39,8 @@ class FriendService implements IFriendService
 
     public function addFriend($userWantAdd, $useBeAdded): mixed
     {
-        if(!$this->userRelationship->isFriend($userWantAdd,$useBeAdded)){
-            $this->userRelationship->addFriend($userWantAdd,$useBeAdded);
+        if(!$this->relationshipRepository->isFriend($userWantAdd,$useBeAdded)){
+            $this->relationshipRepository->addFriend($userWantAdd,$useBeAdded);
             return true;
         }
         return false;
