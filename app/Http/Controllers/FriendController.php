@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers;
 
-
-
 use App\Services\Interfaces\IFriendService;
-
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -48,5 +45,17 @@ class FriendController extends Controller
             );
         }
         return  $this->responseError("We are a friend",  $status = Response::HTTP_BAD_REQUEST);
+
+
+    }
+    public  function findUser(Request $request)
+    {
+        $userId = $request->input("userId");
+        $textSearch = $request->input("textSearch");
+
+        $allUsers = $this->friendService->findAllUser($userId,$textSearch);
+
+        return $this->responseSuccessWithData("Find Successfully",$allUsers->toArray());
+
     }
 }
