@@ -20,7 +20,7 @@ class MessagesController extends Controller
         $offset = $request->input("offset") ?: 0;
         $limit = $request->input("limit") ?: 10;
 
-        $messages = $this->messageService->getMessageFromConversation($userId, $conId, compact("offset", "limit"));
+        $messages = $this->messageService->getMessageFromConversation($userId, $conId, compact("offset", "limit"), true);
         if ($messages) {
             return $this->responseSuccessWithData(
                 "messages.get.successful",
