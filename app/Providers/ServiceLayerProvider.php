@@ -9,6 +9,7 @@ use App\Services\Implements\ConversationService;
 use App\Services\Implements\FriendService;
 use App\Services\Implements\JWTService;
 use App\Services\Implements\MailService;
+use App\Services\Implements\MessagesService;
 use App\Services\Implements\OTPService;
 use App\Services\Implements\RedisService;
 use App\Services\Interfaces\IAccountService;
@@ -17,6 +18,7 @@ use App\Services\Interfaces\IConversationService;
 use App\Services\Interfaces\IFriendService;
 use App\Services\Interfaces\IJWTService;
 use App\Services\Interfaces\IMailService;
+use App\Services\Interfaces\IMessagesService;
 use App\Services\Interfaces\IOTPService;
 use App\Services\Interfaces\IRedisService;
 use Illuminate\Support\ServiceProvider;
@@ -61,6 +63,10 @@ class ServiceLayerProvider extends ServiceProvider
         $this->app->singleton(
             IConversationService::class,
             ConversationService::class
+        );
+        $this->app->singleton(
+            IMessagesService::class,
+            MessagesService::class
         );
     }
 
