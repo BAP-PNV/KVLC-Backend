@@ -37,7 +37,7 @@ class MessagesRepository extends BaseRepository implements IMessagesRepository
                 ->where("con_id", $conversationId)
                 ->skip($filter["offset"])
                 ->take($filter["limit"])
-                ->orderBy("created_at", "asc")
+                ->orderBy("created_at", "desc")
                 ->get();
         return ($messages ? null : $toArray) ? $messages->toArray() : $messages;
     }
