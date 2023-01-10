@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Collection;
 class FriendService implements IFriendService
 {
     public function __construct(
-        private readonly IRelationshipRepository $userRelationship,
+        private readonly IRelationshipRepository $relationshipRepository,
         private readonly IUserRepository $userRepository
     ){}
     public function findPeople(string $searchText, bool $toArray = false): Collection|array{
