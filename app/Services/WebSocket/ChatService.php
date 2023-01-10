@@ -6,6 +6,7 @@ use App\Repositories\Interfaces\IConversationRepository;
 use App\Repositories\Interfaces\IMemberRepository;
 use App\Repositories\Interfaces\IMessagesRepository;
 use App\Repositories\Interfaces\IUserRepository;
+use App\Services\Interfaces\IMessagesService;
 use App\Services\Interfaces\IRedisService;
 use Exception;
 use Ratchet\ConnectionInterface;
@@ -19,7 +20,7 @@ class ChatService implements MessageComponentInterface
     public function __construct(
         private readonly IRedisService $redisService,
         private readonly IUserRepository $userRepository,
-        private readonly IMessagesRepository $messagesRepository
+        private readonly IMessagesService $messagesService
     )
     {
 
@@ -63,7 +64,7 @@ class ChatService implements MessageComponentInterface
             {
                 $fullName = $this->redisService->getFullName($userId);
                 $conId = $data->conId;
-
+                $this->messagesService->save($userId, $conId, $data->message);
                 $isUserInConversation = $this->redisService->isUserInConversation($userId, $conId);
                 if ($isUserInConversation) $this->sendMessageToConversation($conId,  ["message" => $data->message, "from" => $userId, "fullName" => $fullName]);
                 return;
@@ -96,7 +97,6 @@ class ChatService implements MessageComponentInterface
             if ($member != $data["from"]) $this->userConnectionMap[$member]->send(json_encode($data));
         }
         $this->redisService->renewExpireTimeOfConversation($conId);
-        $this->messagesRepository->create(["con_id" => $conId, "user_id" => $data->from, "content" => $data->message]);
     }
 
     private function sendMessage(int $userId, array $data): void
