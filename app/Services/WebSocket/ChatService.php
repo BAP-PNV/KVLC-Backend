@@ -4,6 +4,7 @@ namespace App\Services\WebSocket;
 
 use App\Repositories\Interfaces\IConversationRepository;
 use App\Repositories\Interfaces\IMemberRepository;
+use App\Repositories\Interfaces\IMessagesRepository;
 use App\Repositories\Interfaces\IUserRepository;
 use App\Services\Interfaces\IRedisService;
 use Exception;
@@ -17,7 +18,8 @@ class ChatService implements MessageComponentInterface
 
     public function __construct(
         private readonly IRedisService $redisService,
-        private readonly IUserRepository $userRepository
+        private readonly IUserRepository $userRepository,
+        private readonly IMessagesRepository $messagesRepository
     )
     {
 
@@ -94,6 +96,7 @@ class ChatService implements MessageComponentInterface
             if ($member != $data["from"]) $this->userConnectionMap[$member]->send(json_encode($data));
         }
         $this->redisService->renewExpireTimeOfConversation($conId);
+        $this->messagesRepository->create(["con_id" => $conId, "user_id" => $data->from, "content" => $data->message]);
     }
 
     private function sendMessage(int $userId, array $data): void
