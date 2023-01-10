@@ -15,7 +15,7 @@ class FriendController extends Controller
 
     public function findPeople(Request $request) {
         $userId = $request->input("uid");
-        $textSearch = $request->input("textSearch");
+        $textSearch = $request->input("q");
 
         $allUsers = $this->friendService->findAllUser($userId,$textSearch);
 
