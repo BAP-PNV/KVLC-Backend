@@ -14,8 +14,13 @@ class FriendController extends Controller
     {}
 
     public function findPeople(Request $request) {
-        $q = $request->input("q");
-        return $this->friendService->findPeople($q, true);
+        $userId = $request->input("uid");
+        $textSearch = $request->input("textSearch");
+
+        $allUsers = $this->friendService->findAllUser($userId,$textSearch);
+
+        return $this->responseSuccessWithData("Find Successfully",$allUsers->toArray());
+
     }
     public function findFriend(Request $request){
         $userId = $request->input('id');
@@ -46,16 +51,6 @@ class FriendController extends Controller
         }
         return  $this->responseError("We are a friend",  $status = Response::HTTP_BAD_REQUEST);
 
-
-    }
-    public  function findUser(Request $request)
-    {
-        $userId = $request->input("userId");
-        $textSearch = $request->input("textSearch");
-
-        $allUsers = $this->friendService->findAllUser($userId,$textSearch);
-
-        return $this->responseSuccessWithData("Find Successfully",$allUsers->toArray());
 
     }
 }
