@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 interface IFriendService
 {
-    public function findStrangers(string $searchText): Collection|array;
+    public function findPeople(string $searchText): Collection|array;
     public function addFriend($userWantAdd, $useBeAdded): mixed;
 
     public function findFriend(int $userId, string $searText): mixed;

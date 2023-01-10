@@ -12,7 +12,7 @@ class FriendService implements IFriendService
         private readonly IRelationshipRepository $userRelationship,
         private readonly IUserRepository $userRepository
     ){}
-    public function findStrangers(string $searchText, bool $toArray = false): Collection|array{
+    public function findPeople(string $searchText, bool $toArray = false): Collection|array{
         $users = $this->userRepository->findUser($searchText);
         return $toArray ? $users->toArray() : $users;
     }

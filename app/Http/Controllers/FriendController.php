@@ -16,9 +16,9 @@ class FriendController extends Controller
     )
     {}
 
-    public function findStrangers(Request $request) {
+    public function findPeople(Request $request) {
         $q = $request->input("q");
-        return $this->friendService->findStrangers($q, true);
+        return $this->friendService->findPeople($q, true);
     }
     public function findFriend(Request $request){
         $userId = $request->input('id');
