@@ -20,7 +20,8 @@ class ChatService implements MessageComponentInterface
     public function __construct(
         private readonly IRedisService $redisService,
         private readonly IUserRepository $userRepository,
-        private readonly IMessagesService $messagesService
+        private readonly IMessagesService $messagesService,
+        private readonly IMemberRepository $memberRepository
     )
     {
 
@@ -58,6 +59,13 @@ class ChatService implements MessageComponentInterface
                 $from->send(json_encode(["connectionId" => $connectionId, "type" => "system"]));
 
                 echo "User {$userId} with connection {$connectionId}\n";
+                return;
+            }
+            case "joinConversation": {
+                $conversationId = $data->conId;
+                if ($this->memberRepository->isMemberInConversation($userId, $conversationId)) {
+                    $this->redisService->addActiveMemberToConversation($userId, $conversationId);
+                }
                 return;
             }
             case "sendMsg":
