@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Services\Implements;
 use App\Repositories\Interfaces\IRelationshipRepository;
 use App\Repositories\Interfaces\IUserRepository;
@@ -9,7 +8,7 @@ use Illuminate\Database\Eloquent\Collection;
 class FriendService implements IFriendService
 {
     public function __construct(
-        private readonly IRelationshipRepository $userRelationship,
+        private readonly IRelationshipRepository $relationshipRepository,
         private readonly IUserRepository $userRepository
     ){}
     public function findPeople(string $searchText, bool $toArray = false): Collection|array{
@@ -45,6 +44,18 @@ class FriendService implements IFriendService
             return true;
         }
         return false;
+
+    }
+    public function findAllUser($userId, $textSearch): mixed
+    {
+
+        $allUsers = $this->userRepository->findUser($textSearch);
+        foreach ($allUsers as $user){
+
+            $user->isFriend = $this->relationshipRepository->isFriend($userId,$user->id);
+        }
+
+        return $allUsers;
 
     }
 }

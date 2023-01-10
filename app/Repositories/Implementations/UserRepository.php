@@ -22,10 +22,12 @@ class UserRepository extends BaseRepository implements \App\Repositories\Interfa
         $info = $this->model->find($userId, ["id", "full_name", "email"]);
         return $info ? : null;
     }
+
     public function findUser(string $searchText): mixed
     {
-        return User::select("id", "full_name", "email")
-        ->Where("full_name", "LIKE","%$searchText%")
-        ->orWhere("email", "LIKE","%$searchText%")->get();
+        $listUser =$this->model->select("id", "full_name", "email")
+            ->Where("full_name", "LIKE","%$searchText%")
+            ->orWhere("email", "LIKE","%$searchText%")->get();
+        return sizeof($listUser)!=0 ? $listUser : [];
     }
 }

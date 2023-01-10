@@ -36,6 +36,7 @@ Route::controller(FriendController::class)->prefix("/friend/")->group(function (
 Route::controller(ConversationController::class)->prefix("/conversation/")->group(function () {
     Route::post("add", "addNewConversation");
     Route::post("leave", "leaveConversation");
+    Route::post("find","findUser");
 });
 Route::controller(MessagesController::class)->prefix("/messages")->group(function () {
    Route::post("", "getMessages");
