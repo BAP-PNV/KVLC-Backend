@@ -5,7 +5,6 @@ use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\FriendController;
 use App\Http\Controllers\MessagesController;
 use App\Http\Controllers\RegisterController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -33,10 +32,10 @@ Route::controller(FriendController::class)->prefix("/friend/")->group(function (
     Route::post("add", "addFriend");
     Route::post("un-friend", "unFriend");
 });
-Route::controller(ConversationController::class)->prefix("/conversation/")->group(function () {
-    Route::post("add", "addNewConversation");
-    Route::post("leave", "leaveConversation");
-    Route::post("find","findUser");
+Route::controller(ConversationController::class)->prefix("/conversation")->group(function () {
+    Route::post("/add", "addNewConversation");
+    Route::post("/leave", "leaveConversation");
+    Route::post("","getAllConversations");
 });
 Route::controller(MessagesController::class)->prefix("/messages")->group(function () {
    Route::post("", "getMessages");

@@ -8,17 +8,18 @@ use App\Repositories\Interfaces\IRelationshipRepository;
 use App\Repositories\Interfaces\IUserRepository;
 use App\Services\Interfaces\ConversationCreationStatus;
 use App\Services\Interfaces\IConversationService;
-use App\Services\Interfaces\IFriendService;
+use Illuminate\Database\Eloquent\Collection;
 
 class ConversationService implements IConversationService
 {
     public function __construct(
         private readonly IRelationshipRepository $relationshipRepository,
         private readonly IConversationRepository $conversationRepository,
-        private readonly IMemberRepository $memberRepository,
-        private readonly IUserRepository $userRepository
+        private readonly IMemberRepository       $memberRepository,
+        private readonly IUserRepository         $userRepository
     )
-    {}
+    {
+    }
 
     public function addNewConversation(int $creatorId, int $memberId): ConversationCreationStatus
     {
@@ -30,7 +31,7 @@ class ConversationService implements IConversationService
                 $this->memberRepository->create(["con_id" => $newConId, "user_id" => $memberId, "display_name" => $this->userRepository->findById($memberId)->full_name]);
 
                 return ConversationCreationStatus::SUCCESSFUL;
-            };
+            }
             return ConversationCreationStatus::EXISTED;
         }
         return ConversationCreationStatus::FAILED;
@@ -43,5 +44,11 @@ class ConversationService implements IConversationService
             return true;
         }
         return false;
+    }
+
+    public function getConversationsByUser(int $userId, bool $toArray = false): Collection|array
+    {
+        $conversations = $this->memberRepository->getAllConversationsByUserId($userId);
+        return $toArray ? $conversations->toArray() : $conversations;
     }
 }

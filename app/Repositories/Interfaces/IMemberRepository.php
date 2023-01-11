@@ -8,4 +8,5 @@ interface IMemberRepository extends IRepository {
     public function isMemberInConversation($memberId, $conversationId): bool;
     public function hasConversation(int $userId1, int $userId2): bool;
     public function deleteMemberFromConversation(int $memberId, int $conId): void;
+    public function getAllConversationsByUserId(int $userId): Collection;
 }
