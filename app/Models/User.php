@@ -10,7 +10,7 @@ class User extends Model
 {
     use HasFactory, SoftDeletes;
     protected $table = 'users';
-    protected $fillable = ['email','full_name', 'password', 'status'];
+    protected $fillable = ['email','full_name', 'avatar','password', 'status'];
     public function friendRelationships()
     {
         return $this->hasMany(\App\Models\FriendRelationship::class);

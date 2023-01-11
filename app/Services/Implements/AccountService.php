@@ -19,6 +19,7 @@ class AccountService implements  IAccountService {
           $data['full_name'] = $data['fullName'];
           $data['password'] = Hash::make($data['password']);
           $data['status'] = 0;
+          $data['avatar'] = fake()->imageUrl();
           $this->userRepository->create($data);
           return ["fullName" => $data["full_name"], "email" => $data["email"]];
       }
