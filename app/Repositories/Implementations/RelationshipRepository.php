@@ -35,12 +35,13 @@ class RelationshipRepository extends BaseRepository implements IRelationshipRepo
         $this->model::where('id', $relaId)->delete();
     }
 
-    function getAllFriends(int $userId, bool $toArray = false): Collection|array|null
+    function getAllFriends(int $userId): Collection
     {
-        $arrayRelaId = array_values($this->model::where("user_id", $userId)->get(['id'])->toArray());
-        return $this->model::whereIn("id", $arrayRelaId)
-            ->where('user_id', '!=', $userId)
-            ->get();
+        $arrayRelaId = $this->model::where("user_id", $userId)->get(['id'])->toArray();
+        return $this->model::join("users as u", "u.id", "=", "friend_relationships.user_id")
+                            ->whereIn("friend_relationships.id", $arrayRelaId)
+                            ->where('user_id', '!=', $userId)
+                            ->get(["u.id", "u.full_name", "is_blocked"]);
     }
 
     function isFriend(int $userId1, int $userId2): bool
