@@ -13,24 +13,34 @@ class FriendController extends Controller
     )
     {}
     /**
-     * @OA\Post ( path="/api/friend/search",tags={"Friend"},summary="search friend user added",operationId="findFriend",
-     *  @OA\RequestBody(
-     *       @OA\MediaType(
-     *          mediaType="multipart/form-data",
-     *          @OA\Schema(required={"id","q"},
-     *          @OA\Property(property="id", type="integer"),
-     *          @OA\Property(property="q", type="string"),
-     *     )
-     *       )
-     *   ),
-     *     @OA\Response(response=200,description="successful operation",
+     * @OA\Get( path="/api/friend/people",tags={"Friend"},summary="search friend user added",operationId="findPeople",
+     *       @OA\Parameter(
+     *         name="uid",
+     *         in="query",
+     *         description="Status values that needed to be considered for filter",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *         )
      *     ),
-     *     @OA\Response(response=400,description="Invalid status value"
+     *     @OA\Parameter(
+     *         name="q",
+     *         in="query",
+     *         description="Status values that needed to be considered for filter",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *         )
      *     ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="OK",
+     *      ),
      * security={ {"passport":{}}}
      *
      * )
      */
+
 
     public function findPeople(Request $request) {
         $userId = $request->input("uid");
@@ -41,10 +51,12 @@ class FriendController extends Controller
         return $this->responseSuccessWithData("Find Successfully",$allUsers->toArray());
 
     }
+
     public function findFriend(Request $request){
         $userId = $request->input('id');
         $search = $request->input('q');
-        return $this->friendService->findFriend($userId,$search);
+        $allFriends = $this->friendService->findFriend($userId,$search);
+        return $this->responseSuccessWithData("Find Successfully",$allFriends->toArray());
     }
     /**
      * @OA\Post (path="/api/friend/un-friend", tags={"Friend"},operationId="unFriend",summary="un friend ",

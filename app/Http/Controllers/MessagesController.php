@@ -43,13 +43,13 @@ class MessagesController extends Controller
         return $this->responseError("messages.get.failed");
     }
     /**
-     * @OA\Post(path="/api/edit", tags={"Messages"},operationId="edit",summary="edit messages",
+     * @OA\Post(path="/api/messages/edit", tags={"Messages"},operationId="edit",summary="edit messages",
      *  @OA\RequestBody(@OA\MediaType(mediaType="multipart/form-data",
      *          @OA\Schema(required={"uid","conId","mesId","content"},
      *          @OA\Property(property="uid", type="integer"),
      *          @OA\Property(property="conId", type="integer"),
      *          @OA\Property(property="mesId", type="integer"),
-     *          @OA\Property(property="content", type="integer"),))),
+     *          @OA\Property(property="content", type="string"),))),
      * @OA\Response (response="200", description="Success"),
      * @OA\Response (response="404", description="Not Found"),
      * security={ {"passport":{}}}
@@ -66,7 +66,7 @@ class MessagesController extends Controller
         return $this->responseError("messages.edit.failed");
     }
     /**
-     * @OA\Delete(path="/api/delete", tags={"Messages"},operationId="delete",summary="delete messages",
+     * @OA\Delete(path="/api/messages/delete", tags={"Messages"},operationId="delete",summary="delete messages",
      *  @OA\RequestBody(
      *       @OA\MediaType(
      *          mediaType="multipart/form-data",
