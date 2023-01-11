@@ -13,6 +13,16 @@ class ConversationController extends Controller
     public function __construct(
         private readonly IConversationService $conversationService
     ){}
+
+    public function getAllConversations(Request $request): JsonResponse
+    {
+        $userId = $request->input("uid");
+        $conversations = $this->conversationService->getConversationsByUser($userId, true);
+        return $this->responseSuccessWithData(
+            "conversation.get.successful",
+            $conversations
+        );
+    }
     public function addNewConversation(Request $request): JsonResponse
     {
         $creatorId = $request->input("creator");

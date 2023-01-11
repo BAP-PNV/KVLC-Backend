@@ -57,4 +57,13 @@ class MemberRepository extends BaseRepository implements IMemberRepository
                     ->where("user_id", $memberId)
                     ->delete();
     }
+
+    public function getAllConversationsByUserId(int $userId): Collection
+    {
+        $conArr = $this->model::where("user_id", $userId)->get(["con_id"])->toArray();
+        return $this->model::join("users as u","members_of_conversations.user_id", "=", "u.id")
+                            ->where("user_id", "!=", $userId)
+                            ->whereIn("con_id", $conArr)
+                            ->get(["con_id", "u.full_name"]);
+    }
 }
