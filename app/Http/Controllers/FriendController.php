@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\Interfaces\IFriendService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -13,21 +14,37 @@ class FriendController extends Controller
     )
     {}
 
-    public function findPeople(Request $request) {
+    public function getFriends(Request $request): JsonResponse {
+        $userId = $request->input("uid");
+        $friends = $this->friendService->getFriends($userId, true);
+        return $this->responseSuccessWithData(
+            "friend.get.successful",
+            $friends
+        );
+    }
+    public function findPeople(Request $request): JsonResponse
+    {
         $userId = $request->input("uid");
         $textSearch = $request->input("q");
-
-        $allUsers = $this->friendService->findAllUser($userId,$textSearch);
-
-        return $this->responseSuccessWithData("Find Successfully",$allUsers->toArray());
+        $allUsers = $this->friendService->findAllUser($userId, $textSearch, true);
+        return $this->responseSuccessWithData(
+            "Find Successfully",
+            $allUsers
+        );
 
     }
-    public function findFriend(Request $request){
+    public function findFriend(Request $request): JsonResponse
+    {
         $userId = $request->input('id');
         $search = $request->input('q');
-        return $this->friendService->findFriend($userId,$search);
+        $friends = $this->friendService->findFriend($userId,$search);
+        return $this->responseSuccessWithData(
+            "friend.find.successful",
+            $friends
+        );
     }
-    public function unFriend(Request $request){
+    public function unFriend(Request $request): JsonResponse
+    {
         $userIdWant = $request->input('userIdWant');
         $userIdBe = $request ->input('userIdBe');
         if($this->friendService->unFriend($userIdWant,$userIdBe)){
@@ -38,7 +55,7 @@ class FriendController extends Controller
         };
         return $this->responseError("We are not friend",  $status = Response::HTTP_BAD_REQUEST);
     }
-    public function addFriend(Request $request)
+    public function addFriend(Request $request): JsonResponse
     {
         $userWantAdd = $request->input("userWantAdd");
         $userBeAdded = $request->input('userBeAdded');

@@ -26,11 +26,12 @@ Route::controller(RegisterController::class)->prefix("/account/")->group(functio
     Route::post("register", "register");
     Route::post("confirm-registration","confirmRegistration");
 });
-Route::controller(FriendController::class)->prefix("/friend/")->group(function () {
-    Route::get("people", "findPeople");
-    Route::get("search", "findFriend");
-    Route::post("add", "addFriend");
-    Route::post("un-friend", "unFriend");
+Route::controller(FriendController::class)->prefix("/friend")->group(function () {
+    Route::post("", "getFriends");
+    Route::get("/people", "findPeople");
+    Route::get("/search", "findFriend");
+    Route::post("/add", "addFriend");
+    Route::post("/un-friend", "unFriend");
 });
 Route::controller(ConversationController::class)->prefix("/conversation")->group(function () {
     Route::post("/add", "addNewConversation");

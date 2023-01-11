@@ -3,6 +3,7 @@
 namespace App\Repositories\Implementations;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 
 class UserRepository extends BaseRepository implements \App\Repositories\Interfaces\IUserRepository
 {
@@ -23,9 +24,9 @@ class UserRepository extends BaseRepository implements \App\Repositories\Interfa
         return $info ? : null;
     }
 
-    public function findUser(string $searchText): mixed
+    public function findUser(string $searchText): Collection
     {
-        return $listUser =$this->model->select("id", "full_name", "email")
+        return $this->model->select("id", "full_name", "email")
             ->Where("full_name", "LIKE","%$searchText%")
             ->orWhere("email", "LIKE","%$searchText%")->get();
     }
